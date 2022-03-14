@@ -3,11 +3,25 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Overclicker</title>
+		<script src="https://apis.google.com/js/platform.js?onload=initGapi" async defer></script>
 	</head>
 	<body>
+	    
+	    <div id="auth_false">
+		    <button id="signin_button">Auth</button>
+		</div>
+	    <div id="auth_true" style="display:none;">
+		    <img id="user_image" height="50">
+		    <span id="user_name">...</span>
+		    <button id="signout_button">Logout</button>
+		</div>
+		<script src="google_auth.js"></script>
+		<br>
+		
 		Value: <span id="clicks_counter">0</span><br>
 		<button id="click_button">Click</button><br>
 		<button id="upgrade_button">Upgrade</button><br>
 		<script src="clicker.js"></script>
+		
 	</body>
 </html>
