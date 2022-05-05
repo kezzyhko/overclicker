@@ -4,8 +4,8 @@ let user_name = document.getElementById("user_name")
 let user_image = document.getElementById("user_image")
 
 let auth_divs = {
-    false: document.getElementById("auth_false"),
-    true: document.getElementById("auth_true"),
+	false: document.getElementById("auth_false"),
+	true: document.getElementById("auth_true"),
 }
 
 var GoogleAuth
@@ -31,32 +31,32 @@ function initGapiClient() {
 
 
 function updateFile(fileId, fileMetadata, fileData, callback) {
-    const boundary = '-------314159265358979323846';
-    const delimiter = "\r\n--" + boundary + "\r\n";
-    const close_delim = "\r\n--" + boundary + "--";
-    
-    var multipartRequestBody =
-        delimiter +
-        'Content-Type: application/json\r\n\r\n' +
-        JSON.stringify(fileMetadata) +
-        delimiter +
-        'Content-Type: application/json\r\n' +
-        '\r\n' +
-        JSON.stringify(fileData) +
-        close_delim;
+	const boundary = '-------314159265358979323846';
+	const delimiter = "\r\n--" + boundary + "\r\n";
+	const close_delim = "\r\n--" + boundary + "--";
+	
+	var multipartRequestBody =
+		delimiter +
+		'Content-Type: application/json\r\n\r\n' +
+		JSON.stringify(fileMetadata) +
+		delimiter +
+		'Content-Type: application/json\r\n' +
+		'\r\n' +
+		JSON.stringify(fileData) +
+		close_delim;
 
-    var request = gapi.client.request({
-        'path': '/upload/drive/v2/files/' + fileId,
-        'method': 'PUT',
-        'params': {'uploadType': 'multipart'},
-        'headers': {
-            'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
-        },
-        'body': multipartRequestBody})
-    if (!callback) {
-      callback = function(file) {}
-    }
-    request.execute(callback);
+	var request = gapi.client.request({
+		'path': '/upload/drive/v2/files/' + fileId,
+		'method': 'PUT',
+		'params': {'uploadType': 'multipart'},
+		'headers': {
+			'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+		},
+		'body': multipartRequestBody})
+	if (!callback) {
+	  callback = function(file) {}
+	}
+	request.execute(callback);
 }
 
 
@@ -64,52 +64,52 @@ function updateFile(fileId, fileMetadata, fileData, callback) {
 let saveFileId
 
 function clearAppDataFolder() {
-    gapi.client.drive.files.list(
-        {spaces: 'appDataFolder'}
-    ).then(function(response) {
-        for (const file of response.result.files) {
-            gapi.client.drive.files.delete({fileId: file.id}).then()
-        }
-    })
+	gapi.client.drive.files.list(
+		{spaces: 'appDataFolder'}
+	).then(function(response) {
+		for (const file of response.result.files) {
+			gapi.client.drive.files.delete({fileId: file.id}).then()
+		}
+	})
 }
 
 function load() {
-    gapi.client.drive.files.list({
-        spaces: 'appDataFolder'
-    }).then(function(response) {
-        for (const file of response.result.files) {
-            if (file.name == 'overclicker.save') {
-                saveFileId = file.id
-                break;
-            }
-        }
-        if (saveFileId) {
-            gapi.client.drive.files.get({
-                fileId: saveFileId,
-                alt: "media"
-            }).then(function(response) {
-                gameInfo = response.result
-                updateValue(0)
-            })
-        }
-    })
+	gapi.client.drive.files.list({
+		spaces: 'appDataFolder'
+	}).then(function(response) {
+		for (const file of response.result.files) {
+			if (file.name == 'overclicker.save') {
+				saveFileId = file.id
+				break;
+			}
+		}
+		if (saveFileId) {
+			gapi.client.drive.files.get({
+				fileId: saveFileId,
+				alt: "media"
+			}).then(function(response) {
+				gameInfo = response.result
+				updateValue(0)
+			})
+		}
+	})
 }
 
 function save() {
-    if (saveFileId) {
-        updateFile(saveFileId, {}, gameInfo)
-    } else {
-        gapi.client.drive.files.create({
-            resource: {
-                'name': 'overclicker.save',
-                'mimeType': 'application/json',
-                'parents': ['appDataFolder'],
-            },
-        }).then(function(response) {
-            saveFileId = response.result.id
-        })
-        updateFile(saveFileId, {}, gameInfo)
-    }
+	if (saveFileId) {
+		updateFile(saveFileId, {}, gameInfo)
+	} else {
+		gapi.client.drive.files.create({
+			resource: {
+				'name': 'overclicker.save',
+				'mimeType': 'application/json',
+				'parents': ['appDataFolder'],
+			},
+		}).then(function(response) {
+			saveFileId = response.result.id
+		})
+		updateFile(saveFileId, {}, gameInfo)
+	}
 }
 
 
@@ -119,20 +119,20 @@ signin_button.addEventListener("click", function() {
 })
 
 signout_button.addEventListener("click", function() {
-    save()
+	save()
 	GoogleAuth.signOut()
 })
 
 function updateSigninStatus(isSignedIn) {
 	if (isSignedIn) {
-	    let user = GoogleAuth.currentUser.get()
-	    let profile = user.getBasicProfile()
-	    user_name.innerText = profile.getName()
-	    user_image.src = profile.getImageUrl()
-        load()
+		let user = GoogleAuth.currentUser.get()
+		let profile = user.getBasicProfile()
+		user_name.innerText = profile.getName()
+		user_image.src = profile.getImageUrl()
+		load()
 	} else {
-	    saveFileId = undefined
-	    resetGame()
+		saveFileId = undefined
+		resetGame()
 	}
 	auth_divs[isSignedIn].style.display = "block"
 	auth_divs[!isSignedIn].style.display = "none"

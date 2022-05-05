@@ -7,11 +7,11 @@ let upgrade_button = document.getElementById("upgrade_button")
 let gameInfo
 
 function resetGame() {
-    gameInfo = {}
-    gameInfo.value = 0
-    gameInfo.increasePerClick = 1
-    gameInfo.upgrade_price = 5
-    updateValue(0)
+	gameInfo = {}
+	gameInfo.value = 0
+	gameInfo.increasePerClick = 1
+	gameInfo.upgrade_price = 5
+	updateValue(0)
 }
 
 resetGame()
