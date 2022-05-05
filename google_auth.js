@@ -88,8 +88,12 @@ function load() {
 				fileId: saveFileId,
 				alt: "media"
 			}).then(function(response) {
-				gameInfo = response.result
-				updateValue(0)
+				if (response.result !== false) {
+					gameInfo = response.result
+					updateValue(0)
+				} else {
+					resetGame()
+				}
 			})
 		}
 	})
